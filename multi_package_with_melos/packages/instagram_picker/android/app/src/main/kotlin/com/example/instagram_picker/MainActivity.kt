@@ -1,0 +1,6 @@
+package com.example.instagram_picker
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}
