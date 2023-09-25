@@ -1,0 +1,9 @@
+{
+  "name": "code-smells",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "ts-node": "^10.8.2"
+  }
+}
