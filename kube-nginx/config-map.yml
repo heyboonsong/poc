@@ -1,0 +1,15 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-config
+  namespace: boonsong
+data:
+  default.conf: |
+    server {
+      listen 80;
+      server_name _;
+      location / {
+        default_type application/json;
+        return 200 'Hello, Boonsong!';
+      }
+    }
