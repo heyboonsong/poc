@@ -1,67 +1,91 @@
 "use client";
-
 import { useEffect, useState } from "react";
-import { Button } from "ui";
+import { Table, Input, Button } from "ui";
+import axios from "axios";
 
-const API_HOST = process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3001";
-
-export default function Web() {
-  const [name, setName] = useState<string>("");
-  const [response, setResponse] = useState<{ message: string } | null>(null);
-  const [error, setError] = useState<string | undefined>();
+interface Todo {
+  _id?: string;
+  description: string;
+  done: boolean;
+}
+export default function Page(): JSX.Element {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todo, setTodo] = useState<Todo>({
+    description: "",
+    done: false,
+  });
 
   useEffect(() => {
-    setResponse(null);
-    setError(undefined);
-  }, [name]);
+    return () => getTodos();
+  }, []);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setName(e.target.value);
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      const result = await fetch(`${API_HOST}/message/${name}`);
-      const response = await result.json();
-      setResponse(response);
-    } catch (err) {
-      console.error(err);
-      setError("Unable to fetch response");
+  const onAdd = () => {
+    if (!todo.description) {
+      return alert("Please enter a description");
     }
+    axios
+      .post<Todo>("http://localhost:3001/todos", todo)
+      .then((_) => {
+        getTodos();
+        setTodo({
+          description: "",
+          done: false,
+        });
+      })
+      .catch((err) => {
+        alert(err);
+      });
   };
 
-  const onReset = () => {
-    setName("");
+  const getTodos = () => {
+    axios
+      .get<Todo[]>("http://localhost:3001/todos")
+      .then((response) => {
+        setTodos(response.data);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  };
+
+  const onStatusChange = (index: number) => {
+    const todo = todos[index];
+    axios
+      .patch<Todo>(`http://localhost:3001/todos/${todo._id}`, {
+        done: !todo.done,
+      })
+      .then((_) => {
+        getTodos();
+      })
+      .catch((err) => {
+        alert(err);
+      });
   };
 
   return (
-    <div>
-      <h1>Web</h1>
-      <form onSubmit={onSubmit}>
-        <label htmlFor="name">Name </label>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          value={name}
-          onChange={onChange}
-        ></input>
-        <Button type="submit">Submit</Button>
-      </form>
-      {error && (
-        <div>
-          <h3>Error</h3>
-          <p>{error}</p>
+    <main className="flex min-h-screen w-screen p-24 ">
+      <div className=" flex place-items-center flex-col items-center justify-center w-full">
+        <div className="font-sans w-4/12 pb-16 pt-[48px] md:pb-24 lg:pb-32 md:pt-16 lg:pt-20 flex justify-between gap-8 items-center flex-col  z-0">
+          <div className="w-3/6">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              My To Do List
+            </h1>
+            <div className="pb-5 pt-5 flex justify-between">
+              <Input
+                value={todo.description}
+                onChange={(value: React.ChangeEvent<HTMLInputElement>) => {
+                  setTodo({
+                    ...todo,
+                    description: value.target.value,
+                  });
+                }}
+              />
+              <Button type="submit" onClick={onAdd} title="Add" />
+            </div>
+            <Table dataSource={todos} onStatusChange={onStatusChange} />
+          </div>
         </div>
-      )}
-      {response && (
-        <div>
-          <h3>Greeting</h3>
-          <p>{response.message}</p>
-          <Button onClick={onReset}>Reset</Button>
-        </div>
-      )}
-    </div>
+      </div>
+    </main>
   );
 }
