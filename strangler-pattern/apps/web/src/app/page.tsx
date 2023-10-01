@@ -65,7 +65,7 @@ export default function Page(): JSX.Element {
   return (
     <main className="flex min-h-screen w-screen p-24 ">
       <div className=" flex place-items-center flex-col items-center justify-center w-full">
-        <div className="font-sans w-4/12 pb-16 pt-[48px] md:pb-24 lg:pb-32 md:pt-16 lg:pt-20 flex justify-between gap-8 items-center flex-col  z-0">
+        <div className="font-sans w-10/12 pb-16 pt-[48px] md:pb-24 lg:pb-32 md:pt-16 lg:pt-20 flex justify-between gap-8 items-center flex-col  z-0">
           <div className="w-3/6">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               My To Do List

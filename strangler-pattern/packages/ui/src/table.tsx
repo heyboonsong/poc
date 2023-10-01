@@ -29,7 +29,7 @@ export function Table({ dataSource, onStatusChange }: TableProps) {
               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
             >
               <div
-                className="flex items-center justify-center  cursor-pointer"
+                className="flex items-center justify-start cursor-pointer"
                 onClick={() => {
                   onStatusChange(index);
                 }}
@@ -38,10 +38,31 @@ export function Table({ dataSource, onStatusChange }: TableProps) {
                   className={`w-6 h-6 inline-block mr-2 rounded-full border border-grey flex-no-shrink ${
                     data.done ? "bg-green-400" : "bg-gray-100"
                   }`}
-                ></span>
+                >
+                  {data.done ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-6 h-6 p-1 "
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4.5 12.75l6 6 9-13.5"
+                      />
+                    </svg>
+                  ) : (
+                    ""
+                  )}
+                </span>
               </div>
             </th>
-            <td className="px-6 py-4">{data.description}</td>
+            <td className={`px-6 py-4 ${data.done ? "line-through" : ""}`}>
+              {data.description}
+            </td>
           </tr>
         ))}
       </tbody>

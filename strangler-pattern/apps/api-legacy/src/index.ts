@@ -40,13 +40,12 @@ server.post("/todos", async (req, res) => {
 server.patch("/todos/:id", async (req, res) => {
   const { id } = req.params;
   const { done } = req.body;
-  console.log(id, done);
 
   try {
     await mongoClient.connect();
     const db = mongoClient.db("legacy");
     const todos = await db.collection("todos").updateOne({ _id:  new ObjectId(id) }, { $set: { done } });
-    res.status(200).json(todos);
+    res.status(200).json({ id });
   } catch (error) {
     log(error);
     res.status(500).json({ error: "something went wrong" });
