@@ -10,10 +10,12 @@ export const createServer = () => {
     .use(morgan("dev"))
     .use(urlencoded({ extended: true }))
     .use(json())
-    .use(cors())
-    .get("/message/:name", (req, res) => {
-      return res.json({ message: `hello ${req.params.name}` });
-    })
+    .use(
+      cors({
+        origin: "*",
+        methods: ["GET", "POST", "PATCH", "OPTIONS"],
+      })
+    )
     .get("/healthz", (req, res) => {
       return res.json({ ok: true });
     });
